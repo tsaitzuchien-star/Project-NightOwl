@@ -1,4 +1,3 @@
-// 1. 時鐘功能
 function updateClock() {
     const now = new Date();
     document.getElementById('clock').innerText = now.toLocaleTimeString('zh-TW', { hour12: false });
@@ -6,9 +5,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// 2. 圖表初始化
 document.addEventListener('DOMContentLoaded', function() {
-    // 圓餅圖：四大分類
     const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
     new Chart(ctxDoughnut, {
         type: 'doughnut',
@@ -24,10 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: { 
-                legend: { 
-                    position: 'right', 
-                    labels: { color: '#f8fafc', font: { size: 12 } } 
-                } 
+                legend: { position: 'right', labels: { color: '#f8fafc', font: { size: 12 } } } 
             }
         }
     });
