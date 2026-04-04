@@ -14,70 +14,43 @@
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0; padding: 20px; box-sizing: border-box;
-    min-height: 100vh; display: flex; flex-direction: column;
+    font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
+    margin: 0; padding: 20px;
 }
 
-.header {
-    display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 2px solid var(--card-bg); padding-bottom: 15px; margin-bottom: 20px;
-}
+.header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--card-bg); padding-bottom: 15px; margin-bottom: 20px; }
+.clock { font-size: 24px; font-weight: bold; color: var(--accent-green); }
 
-.header h1 { margin: 0; font-size: 26px; color: var(--accent-blue); }
-.clock { font-size: 24px; font-weight: bold; color: var(--accent-green); font-variant-numeric: tabular-nums; }
-
-/* 總覽區 */
-.summary-section { display: flex; gap: 20px; margin-bottom: 20px; align-items: stretch; }
-.total-power-card {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    border: 1px solid var(--accent-blue); border-radius: 10px; padding: 20px; min-width: 200px;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-}
-.big-number { font-size: 48px; font-weight: bold; }
-.big-number span { font-size: 20px; color: var(--accent-blue); }
-
-.category-breakdown { background: var(--card-bg); border-radius: 10px; flex: 1; min-height: 180px; display: flex; justify-content: center; align-items: center; }
+.summary-section { display: flex; gap: 20px; margin-bottom: 20px; }
+.total-power-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--accent-blue); border-radius: 10px; padding: 20px; min-width: 180px; text-align: center; }
+.big-number { font-size: 42px; font-weight: bold; }
+.category-breakdown { background: var(--card-bg); border-radius: 10px; flex: 1; display: flex; justify-content: center; align-items: center; }
 .category-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 2; }
-.cat-card { background: var(--card-bg); border-radius: 10px; padding: 15px; border-left: 4px solid var(--border-color); }
-.cat-lab { border-left-color: var(--accent-yellow); }
-.cat-ac { border-left-color: var(--accent-blue); }
-.cat-plug { border-left-color: var(--accent-green); }
-.cat-light { border-left-color: var(--accent-pink); }
-.cat-value { font-size: 28px; font-weight: bold; }
+.cat-card { background: var(--card-bg); border-radius: 10px; padding: 12px; border-left: 4px solid var(--accent-blue); }
+.cat-value { font-size: 24px; font-weight: bold; }
 
-/* 圖表與矩陣 */
-.charts-container { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; margin-bottom: 20px; }
-.chart-card { background: var(--card-bg); padding: 20px; border-radius: 10px; display: flex; flex-direction: column; }
-.chart-title { font-size: 16px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-.canvas-wrapper { position: relative; min-height: 200px; }
+.charts-container-single { margin-bottom: 20px; }
+.chart-card { background: var(--card-bg); padding: 15px; border-radius: 10px; }
+.chart-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; color: var(--accent-blue); border-left: 4px solid var(--accent-blue); padding-left: 10px; }
 
-/* 表格樣式 */
-.table-container { overflow-y: auto; }
+.table-container { overflow-x: auto; max-height: 500px; overflow-y: auto; }
 .status-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.status-table th { position: sticky; top: 0; background: var(--card-bg); color: var(--text-secondary); text-align: left; padding: 10px; z-index: 10; }
+.status-table th { position: sticky; top: 0; background: #2d3a4f; padding: 12px; text-align: left; }
 .status-table td { padding: 10px; border-bottom: 1px solid var(--border-color); }
-.bldg-name { font-weight: bold; color: var(--accent-blue); background: rgba(59, 130, 246, 0.1); text-align: center; }
-.kw-value-blue { color: var(--accent-blue); font-weight: bold; }
-.kw-value-red { color: var(--accent-red); font-weight: bold; }
-.kw-value-green { color: var(--accent-green); font-weight: bold; }
-.highlight-yellow { color: var(--accent-yellow); }
 
-/* 總計列 */
-.total-row { background: rgba(30, 41, 59, 0.9); border-top: 2px solid var(--accent-blue); }
-.total-label { text-align: right; font-weight: bold; color: var(--text-primary); }
-.total-value { color: var(--accent-yellow); font-weight: bold; font-size: 18px; }
-.total-diff { color: var(--accent-yellow); font-size: 12px; }
+.bldg-name { font-weight: bold; color: var(--accent-blue); text-align: center; background: rgba(59, 130, 246, 0.05); }
+.kw-blue { color: var(--accent-blue); font-weight: bold; }
+.kw-red { color: var(--accent-red); font-weight: bold; }
+.kw-none { color: var(--text-secondary); }
 
-/* 底部報告 */
-.bottom-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-bottom: 30px; }
-.report-content h4 { color: var(--accent-blue); margin: 10px 0 5px; }
-.report-content ul { color: var(--text-secondary); padding-left: 20px; line-height: 1.6; }
-.action-header { font-weight: bold; color: var(--accent-yellow); border-left: 3px solid var(--accent-yellow); padding-left: 8px; margin: 15px 0 8px; }
-.checkbox-list { list-style: none; padding: 0; color: var(--text-secondary); line-height: 1.8; }
-.checkbox-list span { color: var(--accent-green); font-weight: bold; margin-right: 5px; }
+.total-row { background: rgba(30, 41, 59, 1); border-top: 2px solid var(--accent-yellow); }
+.total-label { text-align: right; font-weight: bold; padding: 15px; }
+.total-value { color: var(--accent-yellow); font-size: 24px; font-weight: bold; }
 
-.badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-.badge-done { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
-.badge-pending { background: rgba(245, 158, 11, 0.2); color: var(--accent-yellow); }
-.badge-none { background: rgba(148, 163, 184, 0.2); color: var(--text-secondary); }
+.bottom-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.report-content h4 { color: var(--accent-green); margin: 10px 0; }
+.report-content ul { padding-left: 20px; color: var(--text-secondary); line-height: 1.6; }
+.action-header { color: var(--accent-yellow); font-weight: bold; margin: 10px 0; }
+.checkbox-list { list-style: none; padding: 0; font-size: 13px; }
+.checkbox-list li { margin-bottom: 8px; }
+.checkbox-list span { color: var(--accent-pink); font-weight: bold; margin-right: 5px; }
