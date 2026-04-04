@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中創園區 - 夜間電力盤查戰情室</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="header">
+        <h1>⚡ 中創園區夜間電力盤查戰情室 (目標基載：132 kW)</h1>
+        <div class="clock" id="clock">00:00:00</div>
+    </div>
+
+    <div class="summary-section">
+        <div class="total-power-card">
+            <h2>夜間總基載</h2>
+            <div class="big-number">132.0 <span>kW</span></div>
+        </div>
+        <div class="category-breakdown">
+            <canvas id="doughnutChart"></canvas>
+        </div>
+        <div class="category-cards">
+            <div class="cat-card cat-lab">
+                <div class="cat-title">實驗室動力</div>
+                <div class="cat-value">55.0 <span>kW</span></div>
+                <div class="cat-status pending">盤點進度 70%</div>
+            </div>
+            <div class="cat-card cat-ac">
+                <div class="cat-title">空調系統</div>
+                <div class="cat-value">40.0 <span>kW</span></div>
+                <div class="cat-status done">盤點進度 90%</div>
+            </div>
+            <div class="cat-card cat-plug">
+                <div class="cat-title">一般插座</div>
+                <div class="cat-value">22.0 <span>kW</span></div>
+                <div class="cat-status pending">盤點進度 50%</div>
+            </div>
+            <div class="cat-card cat-light">
+                <div class="cat-title">照明系統</div>
+                <div class="cat-value">15.0 <span>kW</span></div>
+                <div class="cat-status done">盤點進度 85%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-card">
+            <div class="chart-title">🚨 異常高耗電空間追蹤 (待確認開機必要性)</div>
+            <div class="canvas-wrapper">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-card matrix-card">
+            <div class="chart-title">🗺️ 全區空間盤點矩陣 (尋找剩餘 13.16kW 黑數)</div>
+            <div class="table-container">
+                <table class="status-table">
+                    <thead>
+                        <tr>
+                            <th>建物</th>
+                            <th>樓層/區域</th>
+                            <th>空調/排氣</th>
+                            <th>照明/插座</th>
+                            <th>動力盤</th>
+                            <th>小計(kW)</th>
+                            <th>整體狀態 & 待辦任務</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="3" class="bldg-name">A棟</td>
+                            <td>3F (東/西側)</td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td class="kw-value-blue">10.86</td>
+                            <td>綠能所 7.1kW 待查</td>
+                        </tr>
+                        <tr>
+                            <td>2F (東/西側)</td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td class="kw-value-blue">2.93</td>
+                            <td>機房基載正常</td>
+                        </tr>
+                        <tr>
+                            <td>1F (東/西側)</td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td><span class="badge badge-pending">大廳待分</span></td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td class="kw-value-blue">11.35</td>
+                            <td>廚房需加定時器</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="bldg-name">B棟</td>
+                            <td>3F-4F</td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td><span class="badge badge-pending">缺漏數據</span></td>
+                            <td class="kw-value-red">40.80</td>
+                            <td>美時 14.5kW，<span class="highlight-yellow">缺4F動力數據</span></td>
+                        </tr>
+                        <tr>
+                            <td>1F-2F</td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td><span class="badge badge-pending">缺漏數據</span></td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td class="kw-value-red">29.00</td>
+                            <td>奧鋼聯 12.5kW，<span class="highlight-yellow">缺東側盤點</span></td>
+                        </tr>
+                        <tr>
+                            <td class="bldg-name">C棟</td>
+                            <td>1F-3F</td>
+                            <td><span class="badge badge-none">未開始</span></td>
+                            <td><span class="badge badge-none">未開始</span></td>
+                            <td><span class="badge badge-none">未開始</span></td>
+                            <td class="kw-value-none">--</td>
+                            <td><span class="highlight-yellow">整棟待盤點</span></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="bldg-name">公設</td>
+                            <td>屋頂水塔/機房</td>
+                            <td><span class="badge badge-none">未開始</span></td>
+                            <td><span class="badge badge-none">未開始</span></td>
+                            <td><span class="badge badge-done">已完成</span></td>
+                            <td class="kw-value-green">11.90</td>
+                            <td>水塔與水泵馬達已記錄</td>
+                        </tr>
+                        <tr>
+                            <td>地下室/全區排風</td>
+                            <td><span class="badge badge-done">已解決</span></td>
+                            <td><span class="badge badge-none">未開始</span></td>
+                            <td><span class="badge badge-none">未開始</span></td>
+                            <td class="kw-value-green">12.00</td>
+                            <td>廁所排風 12kW 已納管</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="5" class="total-label">目前已知盤點加總：</td>
+                            <td class="total-value">118.84</td>
+                            <td class="total-diff">(距離目標 132kW 尚餘 13.16 kW 黑數)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-section">
+        <div class="chart-card">
+            <div class="chart-title">🗣️ 主管報告摘要 (盤點細節說明)</div>
+            <div class="report-content">
+                <h4>A棟 (已查明 25.14 kW)</h4>
+                <ul>
+                    <li><strong>A206 機房：</strong> 已調升至 27°C，正與台達原廠協商限頻設定，減少啟動突波。</li>
+                    <li><strong>綠能所 (3F)：</strong> 值班室耗電高達 7.1kW，為本區最大異常基載。</li>
+                </ul>
+                <h4>B棟 (已查明 69.80 kW)</h4>
+                <ul>
+                    <li><strong>美時製藥 (3F)：</strong> 辦公區夜間高達 14.5kW，推測為空調未關。</li>
+                    <li><strong>奧鋼聯 (1F)：</strong> 無塵室 12.5kW 為必要基載。</li>
+                </ul>
+                <h4>公設 (已查明 23.90 kW)</h4>
+                <ul>
+                    <li><strong>廁所排氣：</strong> EMS 納管 31 台排風機，<strong>零成本削減 12kW！</strong></li>
+                    <li><strong>頂樓水系統：</strong> 5.5kW 馬達實測達 6.8kW，具變頻優化潛力。</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-title">🎯 待辦與追蹤事項 (同仁行動清單)</div>
+            <div class="action-content">
+                <div class="action-group">
+                    <div class="action-header">🚨 優先查緝：13.16 kW 黑數</div>
+                    <ul class="checkbox-list">
+                        <li><span>[ ]</span> <strong>C棟全區：</strong> 尚未盤點，需補齊空調、照明與動力數據。</li>
+                        <li><span>[ ]</span> <strong>B棟缺失：</strong> 補齊 4F 動力盤與 1-2F 東側照明插座。</li>
+                        <li><span>[ ]</span> <strong>地下室：</strong> 確認是否有未納管之幫浦或長明燈。</li>
+                    </ul>
+                </div>
+                <div class="action-group">
+                    <div class="action-header">📞 跨單位確認</div>
+                    <ul class="checkbox-list">
+                        <li><span>[ ]</span> <strong>美時製藥：</strong> 釐清 14.5kW 具體設備及關機可行性。</li>
+                        <li><span>[ ]</span> <strong>B棟頂樓：</strong> 確認 5.5kW 水泵之「運轉頻率(Hz)」。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
