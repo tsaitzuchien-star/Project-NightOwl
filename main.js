@@ -1,5 +1,4 @@
-// ⚠️ 請替換為您最新的 GAS 部署網址
-const GOOGLE_APP_URL = "在此貼上您的_GAS_URL";
+const GOOGLE_APP_URL = "在此貼上您最新的_GAS_URL";
 
 function updateClock() {
     const el = document.getElementById('clock');
@@ -18,6 +17,13 @@ function loadRemoteData() {
         .then(data => {
             if(data.summary) summaryDiv.innerHTML = `<ul>${data.summary}</ul>`;
             if(data.completedTasks) {
+                // 先重設所有任務狀態
+                document.querySelectorAll('.interactive-list li').forEach(li => {
+                    li.classList.remove("task-completed");
+                    let check = li.querySelector(".checkbox-mark");
+                    if(check) check.innerText = "[ ]";
+                });
+                // 標記已完成
                 data.completedTasks.forEach(name => {
                     let li = document.getElementById("task_" + name);
                     if (li) {
@@ -30,7 +36,6 @@ function loadRemoteData() {
         }).catch(err => summaryDiv.innerHTML = "<li>❌ 連線失敗</li>");
 }
 
-// 彈窗控制
 const fullModal = document.getElementById("fullReportModal");
 const summaryModal = document.getElementById("summaryModal");
 const simpleModal = document.getElementById("simpleTaskModal");
@@ -48,30 +53,24 @@ window.openSimpleTaskModal = (name) => {
     simpleModal.style.display = "flex";
 };
 
-// 提交盤點數據
 document.getElementById("fullAuditForm").onsubmit = function(e) {
     e.preventDefault();
     const btn = document.getElementById("submitFullBtn");
     btn.disabled = true; btn.innerText = "傳送中...";
-    const payload = {
+    sendData({
         area: document.getElementById("f_area").value,
         ac_kw: document.getElementById("f_ac_kw").value,
-        light_kw: document.getElementById("f_light_kw").value,
+        power_kw: document.getElementById("f_power_kw").value,
         notes: document.getElementById("f_notes").value
-    };
-    sendData(payload, fullModal, btn, "傳送盤點數據 🚀");
+    }, fullModal, btn, "傳送數據 🚀");
 };
 
-// 提交手動摘要
 window.submitManualSummary = function() {
     const content = document.getElementById("manual_summary_text").value;
     if(!content) return alert("請輸入內容！");
-    const btn = event.target;
-    btn.disabled = true; btn.innerText = "發布中...";
-    sendData({ type: "manual_summary", content: content }, summaryModal, btn, "發布至戰情室 🚀");
+    sendData({ type: "manual_summary", content: content }, summaryModal, event.target, "發布 🚀");
 };
 
-// 提交任務回報
 document.getElementById("simpleTaskForm").onsubmit = function(e) {
     e.preventDefault();
     const btn = document.getElementById("submitSimpleBtn");
