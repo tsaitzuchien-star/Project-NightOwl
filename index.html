@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中創園區 - 夜間電力盤查戰情室</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.1">
 </head>
 <body>
 
@@ -132,41 +132,31 @@
                     <select id="f_area" required>
                         <option value="">請選擇盤點區域...</option>
                         <optgroup label="A 棟">
-                            <option value="A棟 3F 東側">A棟 3F 東側</option>
-                            <option value="A棟 3F 西側">A棟 3F 西側</option>
-                            <option value="A棟 2F 東側">A棟 2F 東側</option>
-                            <option value="A棟 2F 西側">A棟 2F 西側</option>
-                            <option value="A棟 1F 東側">A棟 1F 東側</option>
-                            <option value="A棟 1F 西側">A棟 1F 西側</option>
+                            <option value="A棟 3F 東側">A棟 3F 東側</option><option value="A棟 3F 西側">A棟 3F 西側</option>
+                            <option value="A棟 2F 東側">A棟 2F 東側</option><option value="A棟 2F 西側">A棟 2F 西側</option>
+                            <option value="A棟 1F 東側">A棟 1F 東側</option><option value="A棟 1F 西側">A棟 1F 西側</option>
                         </optgroup>
                         <optgroup label="B 棟">
-                            <option value="B棟 4F 東側">B棟 4F 東側</option>
-                            <option value="B棟 4F 西側">B棟 4F 西側</option>
-                            <option value="B棟 3F 東側">B棟 3F 東側</option>
-                            <option value="B棟 3F 西側">B棟 3F 西側</option>
-                            <option value="B棟 2F 東側">B棟 2F 東側</option>
-                            <option value="B棟 2F 西側">B棟 2F 西側</option>
-                            <option value="B棟 1F 東側">B棟 1F 東側</option>
-                            <option value="B棟 1F 西側">B棟 1F 西側</option>
+                            <option value="B棟 4F 東側">B棟 4F 東側</option><option value="B棟 4F 西側">B棟 4F 西側</option>
+                            <option value="B棟 3F 東側">B棟 3F 東側</option><option value="B棟 3F 西側">B棟 3F 西側</option>
+                            <option value="B棟 2F 東側">B棟 2F 東側</option><option value="B棟 2F 西側">B棟 2F 西側</option>
+                            <option value="B棟 1F 東側">B棟 1F 東側</option><option value="B棟 1F 西側">B棟 1F 西側</option>
                         </optgroup>
                         <optgroup label="C 棟">
-                            <option value="C棟 3F">C棟 3F</option>
-                            <option value="C棟 2F">C棟 2F</option>
-                            <option value="C棟 1F">C棟 1F</option>
+                            <option value="C棟 3F">C棟 3F</option><option value="C棟 2F">C棟 2F</option><option value="C棟 1F">C棟 1F</option>
                         </optgroup>
                         <optgroup label="公共區域">
-                            <option value="屋頂水塔/機房">屋頂水塔/機房</option>
-                            <option value="地下室/排風">地下室/排風</option>
+                            <option value="屋頂水塔/機房">屋頂水塔/機房</option><option value="地下室/排風">地下室/排風</option>
                         </optgroup>
                     </select>
                 </div>
                 <div class="form-row">
-                    <div class="form-col"><label>❄️ 空調盤號/kW</label><input type="text" id="f_ac_id" placeholder="盤號"><input type="number" step="0.01" id="f_ac_kw" placeholder="kW"></div>
-                    <div class="form-col"><label>💡 照明盤號/kW</label><input type="text" id="f_light_id" placeholder="盤號"><input type="number" step="0.01" id="f_light_kw" placeholder="kW"></div>
+                    <div class="form-col"><label>❄️ 空調盤號 / kW</label><input type="text" id="f_ac_id" placeholder="盤號"><input type="number" step="0.01" id="f_ac_kw" placeholder="度數"></div>
+                    <div class="form-col"><label>💡 照明盤號 / kW</label><input type="text" id="f_light_id" placeholder="盤號"><input type="number" step="0.01" id="f_light_kw" placeholder="度數"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-col"><label>🔌 插座盤號/kW</label><input type="text" id="f_plug_id" placeholder="盤號"><input type="number" step="0.01" id="f_plug_kw" placeholder="kW"></div>
-                    <div class="form-col"><label>⚙️ 動力盤號/kW</label><input type="text" id="f_power_id" placeholder="盤號"><input type="number" step="0.01" id="f_power_kw" placeholder="kW"></div>
+                    <div class="form-col"><label>🔌 插座盤號 / kW</label><input type="text" id="f_plug_id" placeholder="盤號"><input type="number" step="0.01" id="f_plug_kw" placeholder="度數"></div>
+                    <div class="form-col"><label>⚙️ 動力盤號 / kW</label><input type="text" id="f_power_id" placeholder="盤號"><input type="number" step="0.01" id="f_power_kw" placeholder="度數"></div>
                 </div>
                 <div class="form-group"><label>⚠️ 現場備註 (可留空)</label><textarea id="f_notes" rows="2"></textarea></div>
                 <button type="submit" id="submitFullBtn" class="submit-btn">傳送盤點數據 🚀</button>
@@ -183,11 +173,11 @@
                     <label style="font-size:15px; color:var(--accent-yellow);">✍️ 任務執行結果 (必填)</label>
                     <textarea id="t_notes" rows="4" placeholder="請簡述您的處理狀況，AI 會自動幫您修正錯字與潤飾..." required></textarea>
                 </div>
-                <button type="submit" id="submitSimpleBtn" class="submit-btn" style="background-color: var(--accent-yellow); color: var(--bg-color);">送出任務回報 ⚡</button>
+                <button type="submit" id="submitSimpleBtn" class="submit-btn">送出任務回報 ⚡</button>
             </form>
         </div>
     </div>
 
-    <script src="main.js"></script>
+    <script src="main.js?v=1.1"></script>
 </body>
 </html>
