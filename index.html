@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中創園區 - 夜間電力盤查戰情室</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20260406-v1">
 </head>
 <body>
+
     <div class="header">
-        <h1>⚡ 中創園區夜間電力盤查戰情室 (目標：132 kW)</h1>
+        <h1>⚡ 中創園區夜間電力盤查戰情室 (目標基載：132 kW)</h1>
         <div class="header-right">
-            <button onclick="openSummaryModal()" class="task-btn" style="border-color:var(--accent-green); color:var(--accent-green); margin-right:10px;">📝 更新摘要</button>
+            <div class="clock" id="clock">00:00:00</div>
             <button id="openFormBtn" class="report-btn">➕ 例行盤點回報</button>
         </div>
     </div>
@@ -21,61 +22,119 @@
             <h2>夜間總基載</h2>
             <div class="big-number">132.0 <span>kW</span></div>
         </div>
-        <div class="category-breakdown"><canvas id="doughnutChart"></canvas></div>
+        <div class="category-breakdown">
+            <canvas id="doughnutChart"></canvas>
+        </div>
         <div class="category-cards">
-            <div class="cat-card cat-lab"><div class="cat-title">實驗室動力</div><div class="cat-value">55.0 <span>kW</span></div></div>
-            <div class="cat-card cat-ac"><div class="cat-title">空調系統</div><div class="cat-value">40.0 <span>kW</span></div></div>
-            <div class="cat-card cat-plug"><div class="cat-title">一般插座</div><div class="cat-value">22.0 <span>kW</span></div></div>
-            <div class="cat-card cat-light"><div class="cat-title">照明系統</div><div class="cat-value">15.0 <span>kW</span></div></div>
+            <div class="cat-card cat-lab"><div class="cat-title">實驗室動力</div><div class="cat-value">55.0 <span>kW</span></div><div class="cat-status pending">盤點進度 70%</div></div>
+            <div class="cat-card cat-ac"><div class="cat-title">空調系統</div><div class="cat-value">40.0 <span>kW</span></div><div class="cat-status done">盤點進度 90%</div></div>
+            <div class="cat-card cat-plug"><div class="cat-title">一般插座</div><div class="cat-value">22.0 <span>kW</span></div><div class="cat-status pending">盤點進度 50%</div></div>
+            <div class="cat-card cat-light"><div class="cat-title">照明系統</div><div class="cat-value">15.0 <span>kW</span></div><div class="cat-status done">盤點進度 85%</div></div>
         </div>
     </div>
 
-    <div class="chart-card">
-        <div class="chart-title">🗺️ 全區空間盤點矩陣 (各樓層電力狀態)</div>
-        <div class="table-container">
-            <table class="status-table">
-                <thead>
-                    <tr><th>建物</th><th>樓層/區域</th><th>空調</th><th>照明</th><th>插座</th><th>動力</th><th>小計</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td rowspan="3" class="bldg-name">A 棟</td><td>3F 東西側</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>--</td></tr>
-                    <tr><td>2F 東西側</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>--</td></tr>
-                    <tr><td>1F 西側</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>11.35</td></tr>
-                    <tr><td rowspan="3" class="bldg-name">B 棟</td><td>4F 東西側</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td><td>--</td></tr>
-                    <tr><td>3F 東西側</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>20.40</td></tr>
-                    <tr><td>1F 西側</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>14.50</td></tr>
-                    <tr><td class="bldg-name">C 棟</td><td>全區</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td><td>--</td></tr>
-                    <tr><td class="bldg-name">公設</td><td>地下室/頂樓</td><td>✅</td><td>❌</td><td>❌</td><td>✅</td><td>23.90</td></tr>
-                </tbody>
-            </table>
+    <div class="charts-container-single">
+        <div class="chart-card matrix-card">
+            <div class="chart-title">🗺️ 全區空間盤點矩陣 (東西側配電盤獨立追蹤)</div>
+            <div class="table-container">
+                <table class="status-table">
+                    <thead><tr><th>建物</th><th>樓層 / 側別</th><th>空調</th><th>照明盤</th><th>插座盤</th><th>動力盤</th><th>小計(kW)</th></tr></thead>
+                    <tbody>
+                        <tr><td rowspan="6" class="bldg-name">A 棟</td><td>3F (東側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-blue">--</td></tr>
+                        <tr><td>3F (西側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-blue">--</td></tr>
+                        <tr><td>2F (東側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-blue">--</td></tr>
+                        <tr><td>2F (西側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-blue">--</td></tr>
+                        <tr><td>1F (東側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td style="background-color: rgba(245, 158, 11, 0.1);">⚠️<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-blue">--</td></tr>
+                        <tr><td>1F (西側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag fill">盤號: EP1A</div></td><td class="kw-blue">11.35</td></tr>
+                        <tr><td rowspan="8" class="bldg-name">B 棟</td><td>4F (東側)</td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-red">--</td></tr>
+                        <tr><td>4F (西側)</td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-red">--</td></tr>
+                        <tr><td>3F (東側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-blue">20.40</td></tr>
+                        <tr><td>3F (西側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-red">20.40</td></tr>
+                        <tr><td>2F (東側)</td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-red">--</td></tr>
+                        <tr><td>2F (西側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-blue">14.50</td></tr>
+                        <tr><td>1F (東側)</td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-red">--</td></tr>
+                        <tr><td>1F (西側)</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-blue">14.50</td></tr>
+                        <tr><td rowspan="3" class="bldg-name">C 棟</td><td>3F</td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-none">--</td></tr>
+                        <tr><td>2F</td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-none">--</td></tr>
+                        <tr><td>1F</td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-none">--</td></tr>
+                        <tr><td rowspan="2" class="bldg-name">公設</td><td>屋頂機房</td><td>--</td><td>--</td><td>--</td><td>✅<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-green">11.90</td></tr>
+                        <tr><td>地下室排風</td><td>✅<div class="panel-tag fill">盤號: ACB2-1</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td>❌<div class="panel-tag empty">盤號: ❌</div></td><td class="kw-green">12.00</td></tr>
+                        <tr class="total-row"><td colspan="6" class="total-label">目前已知加總：</td><td class="total-value">118.84</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div class="bottom-section">
+    <div class="bottom-section" style="grid-template-columns: 1fr;">
         <div class="chart-card">
-            <div class="chart-title">🗣️ 戰情動態摘要 (手動更新)</div>
-            <div class="report-content" id="aiReportSummary"><ul><li>載入中...</li></ul></div>
-        </div>
-
-        <div class="chart-card">
-            <div class="chart-title">🎯 同仁行動清單 (任務追蹤)</div>
-            <ul class="interactive-list">
-                <li id="task_A棟1F大廳11.35kW組成釐清"><div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>A棟1F：</strong> 釐清大廳 11.35kW 組成</div><button class="task-btn" onclick="openSimpleTaskModal('A棟1F大廳11.35kW組成釐清')">⚡ 處理</button></li>
-                <li id="task_美時製藥14.5kW關機可行性"><div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>美時：</strong> 14.5kW 關機可行性</div><button class="task-btn" onclick="openSimpleTaskModal('美時製藥14.5kW關機可行性')">⚡ 處理</button></li>
-                <li id="task_B棟頂樓水泵運轉頻率回報"><div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>B棟頂樓：</strong> 水泵運轉頻率回報</div><button class="task-btn" onclick="openSimpleTaskModal('B棟頂樓水泵運轉頻率回報')">⚡ 處理</button></li>
-                <li id="task_全區缺漏配電盤號補齊"><div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>全區：</strong> 補齊標示 ❌ 之盤號</div><button class="task-btn" onclick="openSimpleTaskModal('全區缺漏配電盤號補齊')">⚡ 處理</button></li>
-                <li id="task_B棟4F全部電盤數據盤點"><div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>B棟4F：</strong> 全部電盤數據盤點</div><button class="task-btn" onclick="openSimpleTaskModal('B棟4F全部電盤數據盤點')">⚡ 處理</button></li>
-                <li id="task_C棟全區照明與插座盤點"><div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>C棟：</strong> 全區照明與插座盤點</div><button class="task-btn" onclick="openSimpleTaskModal('C棟全區照明與插座盤點')">⚡ 處理</button></li>
-            </ul>
+            <div class="chart-title">🎯 同仁行動清單 (任務回報即時追蹤)</div>
+            <div class="action-content" style="display: flex; gap: 20px;">
+                <div class="action-group" style="flex: 1;">
+                    <div class="action-header">🚨 待確認異常</div>
+                    <ul class="interactive-list">
+                        <li id="task_A棟1F大廳11.35kW組成釐清">
+                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>A 棟 1F：</strong> 釐清大廳 11.35kW 組成。</div>
+                            <button class="task-btn" onclick="openSimpleTaskModal('A棟1F大廳11.35kW組成釐清')">⚡ 處理</button>
+                        </li>
+                        <li id="task_美時製藥14.5kW關機可行性">
+                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>美時製藥：</strong> 洽租戶釐清 14.5kW 關機。</div>
+                            <button class="task-btn" onclick="openSimpleTaskModal('美時製藥14.5kW關機可行性')">⚡ 處理</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="action-group" style="flex: 1;">
+                    <div class="action-header">📋 數據補齊</div>
+                    <ul class="interactive-list">
+                        <li id="task_全區缺漏配電盤號補齊">
+                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>全區盤號：</strong> 補齊標示 ❌ 之盤號。</div>
+                            <button class="task-btn" onclick="openSimpleTaskModal('全區缺漏配電盤號補齊')">⚡ 處理</button>
+                        </li>
+                        <li id="task_B棟4F全部電盤數據盤點">
+                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>B 棟 4F：</strong> 需補齊電盤數據。</div>
+                            <button class="task-btn" onclick="openSimpleTaskModal('B棟4F全部電盤數據盤點')">⚡ 處理</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="fullReportModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeFullModal()">&times;</span><h2>🔢 例行盤點回報</h2><form id="fullAuditForm"><div class="form-group"><label>📍 區域</label><select id="f_area" required><option value="A棟 1F 西側">A棟 1F 西側</option><option value="B棟 3F">B棟 3F</option><option value="地下室">地下室</option></select></div><div class="form-row"><div class="form-col"><label>❄️ 空調(kW)</label><input type="number" step="0.01" id="f_ac_kw"></div><div class="form-col"><label>⚙️ 動力(kW)</label><input type="number" step="0.01" id="f_power_kw"></div></div><div class="form-group"><label>⚠️ 現場備註</label><textarea id="f_notes" rows="2"></textarea></div><button type="submit" id="submitFullBtn" class="submit-btn">傳送數據 🚀</button></form></div></div>
+    <div id="fullReportModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeFullModal()">&times;</span>
+            <h2>🔢 例行盤點數據回報</h2>
+            <form id="fullAuditForm">
+                <div class="form-group">
+                    <label>📍 區域</label>
+                    <select id="f_area" required>
+                        <option value="">請選擇...</option>
+                        <optgroup label="A 棟">
+                            <option value="A棟 3F 東側">A棟 3F 東側</option><option value="A棟 1F 西側">A棟 1F 西側</option>
+                        </optgroup>
+                        </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-col"><label>空調 kW</label><input type="number" step="0.01" id="f_ac_kw"></div>
+                    <div class="form-col"><label>照明 kW</label><input type="number" step="0.01" id="f_light_kw"></div>
+                </div>
+                <div class="form-group"><label>⚠️ 現場備註</label><textarea id="f_notes" rows="2"></textarea></div>
+                <button type="submit" id="submitFullBtn" class="submit-btn">傳送數據 🚀</button>
+            </form>
+        </div>
+    </div>
 
-    <div id="summaryModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeSummaryModal()">&times;</span><h2>✍️ 張貼分析摘要</h2><textarea id="manual_summary_text" rows="12" placeholder="<li><strong>重點：</strong>內容...</li>"></textarea><button onclick="submitManualSummary()" class="submit-btn">發布 🚀</button></div></div>
+    <div id="simpleTaskModal" class="modal">
+        <div class="modal-content simple-modal">
+            <span class="close-btn" onclick="closeSimpleModal()">&times;</span>
+            <div id="simpleTaskBadge" class="task-badge"></div>
+            <form id="simpleTaskForm">
+                <textarea id="t_notes" rows="4" placeholder="請輸入處理狀況..." required></textarea>
+                <button type="submit" id="submitSimpleBtn" class="submit-btn">送出回報 ⚡</button>
+            </form>
+        </div>
+    </div>
 
-    <div id="simpleTaskModal" class="modal"><div class="modal-content simple-modal"><span class="close-btn" onclick="closeSimpleModal()">&times;</span><div id="simpleTaskBadge" class="task-badge"></div><form id="simpleTaskForm"><textarea id="t_notes" rows="4" placeholder="處理結果..." required></textarea><button type="submit" id="submitSimpleBtn" class="submit-btn">送出回報 ⚡</button></form></div></div>
-
-    <script src="main.js"></script>
+    <script src="main.js?v=20260406-v1"></script>
 </body>
 </html>
