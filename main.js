@@ -6,7 +6,7 @@ function updateClock() {
 setInterval(updateClock, 1000); updateClock();
 
 // API 網址 (確認與 GAS 發佈網址一致)
-const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbxQCt01F5QWVtSN3n7ARKDXrEViCE8IdgCYnFo3Fu41ZvmAsf-eKYpcn-C0cU20L50Dhg/exec";
+const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbwnQFPdzmCsn-8S2zHqPHTsojOrWd9h2buYqWhvycVrl8gQI4wzR6wnUC2e00wNP26ugA/exec";
 
 // 2. 初始化
 document.addEventListener('DOMContentLoaded', function() {
