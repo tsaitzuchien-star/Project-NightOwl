@@ -1,34 +1,22 @@
+// ⚠️ 請替換為您最新的 GAS 部署網址
+const GOOGLE_APP_URL = "在此貼上您的_GAS_URL";
+
 function updateClock() {
     const el = document.getElementById('clock');
     if (el) el.innerText = new Date().toLocaleTimeString('zh-TW', { hour12: false });
 }
 setInterval(updateClock, 1000); updateClock();
 
-// ⚠️ 請替換為您「新增部署作業」後取得的 URL
-const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbwnQFPdzmCsn-8S2zHqPHTsojOrWd9h2buYqWhvycVrl8gQI4wzR6wnUC2e00wNP26ugA/exec";
+document.addEventListener('DOMContentLoaded', loadRemoteData);
 
-document.addEventListener('DOMContentLoaded', function() {
-    loadRemoteData();
-    try {
-        const canvas = document.getElementById('doughnutChart');
-        if (canvas && typeof Chart !== 'undefined') {
-            new Chart(canvas.getContext('2d'), {
-                type: 'doughnut',
-                data: { labels: ['動力', '空調', '插座', '照明'], datasets: [{ data: [55, 40, 22, 15], backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ec4899'], borderWidth: 0 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#f8fafc' } } } }
-            });
-        }
-    } catch (e) { console.error("Chart Error:", e); }
-});
-
-window.loadRemoteData = function() {
+function loadRemoteData() {
     const summaryDiv = document.getElementById("aiReportSummary");
-    if (summaryDiv) summaryDiv.innerHTML = `<h4 style="color:var(--accent-green);">⏳ AI 正在同步資料庫並生成摘要中...</h4><ul><li>請稍候...</li></ul>`;
+    summaryDiv.innerHTML = "<ul><li>同步中...</li></ul>";
 
     fetch(GOOGLE_APP_URL)
         .then(r => r.json())
         .then(data => {
-            if(data.summary && summaryDiv) summaryDiv.innerHTML = `<h4 style="color:var(--accent-green);">⚡ 戰情動態摘要 (AI 即時彙總)</h4><ul>${data.summary}</ul>`;
+            if(data.summary) summaryDiv.innerHTML = `<ul>${data.summary}</ul>`;
             if(data.completedTasks) {
                 data.completedTasks.forEach(name => {
                     let li = document.getElementById("task_" + name);
@@ -39,51 +27,66 @@ window.loadRemoteData = function() {
                     }
                 });
             }
-        }).catch(err => { if(summaryDiv) summaryDiv.innerHTML = `<ul><li><span style="color:var(--accent-red)">❌ 資料庫連線失敗 (請檢查網址或權限)</span></li></ul>`; });
-};
+        }).catch(err => summaryDiv.innerHTML = "<li>❌ 連線失敗</li>");
+}
 
+// 彈窗控制
 const fullModal = document.getElementById("fullReportModal");
+const summaryModal = document.getElementById("summaryModal");
 const simpleModal = document.getElementById("simpleTaskModal");
 let currentTaskName = "";
 
 document.getElementById("openFormBtn").onclick = () => { fullModal.style.display = "flex"; };
+window.openSummaryModal = () => { summaryModal.style.display = "flex"; };
 window.closeFullModal = () => { fullModal.style.display = "none"; };
+window.closeSummaryModal = () => { summaryModal.style.display = "none"; };
 window.closeSimpleModal = () => { simpleModal.style.display = "none"; };
 
-window.openSimpleTaskModal = function(taskName) {
-    currentTaskName = taskName;
-    document.getElementById("simpleTaskBadge").innerHTML = "📌 <b>任務：</b>" + taskName;
+window.openSimpleTaskModal = (name) => {
+    currentTaskName = name;
+    document.getElementById("simpleTaskBadge").innerHTML = "📌 任務：" + name;
     simpleModal.style.display = "flex";
 };
 
+// 提交盤點數據
 document.getElementById("fullAuditForm").onsubmit = function(e) {
     e.preventDefault();
     const btn = document.getElementById("submitFullBtn");
     btn.disabled = true; btn.innerText = "傳送中...";
     const payload = {
         area: document.getElementById("f_area").value,
-        ac_id: document.getElementById("f_ac_id").value, ac_kw: document.getElementById("f_ac_kw").value,
-        light_id: document.getElementById("f_light_id").value, light_kw: document.getElementById("f_light_kw").value,
-        plug_id: document.getElementById("f_plug_id").value, plug_kw: document.getElementById("f_plug_kw").value,
-        power_id: document.getElementById("f_power_id").value, power_kw: document.getElementById("f_power_kw").value,
+        ac_kw: document.getElementById("f_ac_kw").value,
+        light_kw: document.getElementById("f_light_kw").value,
         notes: document.getElementById("f_notes").value
     };
     sendData(payload, fullModal, btn, "傳送盤點數據 🚀");
 };
 
+// 提交手動摘要
+window.submitManualSummary = function() {
+    const content = document.getElementById("manual_summary_text").value;
+    if(!content) return alert("請輸入內容！");
+    const btn = event.target;
+    btn.disabled = true; btn.innerText = "發布中...";
+    sendData({ type: "manual_summary", content: content }, summaryModal, btn, "發布至戰情室 🚀");
+};
+
+// 提交任務回報
 document.getElementById("simpleTaskForm").onsubmit = function(e) {
     e.preventDefault();
     const btn = document.getElementById("submitSimpleBtn");
     btn.disabled = true; btn.innerText = "傳送中...";
-    const payload = { area: "任務回報", notes: `【${currentTaskName}】 ` + document.getElementById("t_notes").value };
-    sendData(payload, simpleModal, btn, "送出任務回報 ⚡");
+    sendData({ area: "任務回報", notes: `【${currentTaskName}】 ` + document.getElementById("t_notes").value }, simpleModal, btn, "送出回報 ⚡");
 };
 
 function sendData(payload, modal, btn, originalText) {
     fetch(GOOGLE_APP_URL, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(payload) })
-    .then(r => r.json()).then(data => {
-        alert("✅ 匯報成功！"); modal.style.display = "none"; loadRemoteData();
-    }).catch(err => alert("⚠️ 傳送失敗")).finally(() => { btn.disabled = false; btn.innerText = originalText; });
+    .then(r => r.json())
+    .then(data => {
+        alert("✅ 操作成功！");
+        modal.style.display = "none";
+        loadRemoteData();
+    })
+    .catch(err => alert("⚠️ 傳送失敗"))
+    .finally(() => { btn.disabled = false; btn.innerText = originalText; });
 }
-// 每 5 分鐘自動刷新
-setInterval(loadRemoteData, 300000);
