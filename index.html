@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中創園區 - 夜間電力盤查戰情室</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -74,10 +74,15 @@
         <div class="chart-card">
             <div class="chart-title" style="display: flex; justify-content: space-between; align-items: center;">
                 <span>🗣️ 戰情動態摘要 (AI 即時彙總)</span>
-                <button onclick="loadRemoteData()" style="background:none; border:none; color:var(--accent-blue); font-size:16px; cursor:pointer;" title="手動同步資料庫">🔄</button>
+                <button onclick="loadRemoteData()" style="background:none; border:none; color:var(--accent-blue); cursor:pointer;" title="同步資料庫">🔄</button>
             </div>
             <div class="report-content" id="aiReportSummary">
-                <ul><li><span style="color:var(--text-secondary)">等待系統同步中...</span></li></ul>
+                <h4 style="color:var(--accent-green);">📊 目前關鍵發現彙整</h4>
+                <ul>
+                    <li><strong>管理節能成果：</strong> 已識別公設區 31 台排風機具備 <strong>12kW</strong> 停機節能空間。</li>
+                    <li><strong>租戶耗電監控：</strong> B 棟 3F <strong>美時製藥</strong> 夜間基載高達 14.5kW (異常偏高)。</li>
+                    <li><strong>硬體優化建議：</strong> 頂樓 5.5kW 水泵實測功耗 <strong>6.8kW (超載運轉)</strong>，具變頻優化潛力。</li>
+                </ul>
             </div>
         </div>
 
@@ -88,15 +93,15 @@
                     <div class="action-header">🚨 待確認之異常與跨單位聯繫</div>
                     <ul class="interactive-list">
                         <li id="task_A棟1F大廳11.35kW組成釐清">
-                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>A 棟 1F 東側：</strong> 釐清大廳照明與插座之 11.35kW 具體組成設備。</div>
+                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>A 棟 1F：</strong> 釐清大廳 11.35kW 組成 (疑電視牆未關)。</div>
                             <button class="task-btn" onclick="openSimpleTaskModal('A棟1F大廳11.35kW組成釐清')">⚡ 處理回報</button>
                         </li>
                         <li id="task_美時製藥14.5kW關機可行性">
-                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>美時製藥 (B棟3F)：</strong> 釐清辦公區 14.5kW 之具體設備及夜間關機可行性。</div>
+                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>美時製藥：</strong> 洽租戶釐清 14.5kW 關機可行性。</div>
                             <button class="task-btn" onclick="openSimpleTaskModal('美時製藥14.5kW關機可行性')">⚡ 處理回報</button>
                         </li>
                         <li id="task_B棟頂樓水泵運轉頻率回報">
-                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>B棟頂樓水系統：</strong> 確認 5.5kW 水泵目前的「運轉頻率(Hz)」。</div>
+                            <div class="task-info"><span class="checkbox-mark">[ ]</span> <strong>B棟頂樓：</strong> 確認 5.5kW 水泵目前的運轉頻率(Hz)。</div>
                             <button class="task-btn" onclick="openSimpleTaskModal('B棟頂樓水泵運轉頻率回報')">⚡ 處理回報</button>
                         </li>
                     </ul>
@@ -105,7 +110,7 @@
                     <div class="action-header">📋 缺漏數據與配電盤號補齊</div>
                     <ul class="interactive-list">
                         <li id="task_全區缺漏配電盤號補齊">
-                            <div class="task-info"><span class="checkbox-mark" style="color:var(--accent-red)">[急]</span> <strong>全區盤號：</strong> 矩陣內標示「盤號: ❌」之處，需抄錄專屬編號 (如 EP3A)。</div>
+                            <div class="task-info"><span class="checkbox-mark" style="color:var(--accent-red)">[急]</span> <strong>全區盤號：</strong> 補齊標示 ❌ 之盤號 (如 EP3A)。</div>
                             <button class="task-btn" onclick="openSimpleTaskModal('全區缺漏配電盤號補齊')">⚡ 處理回報</button>
                         </li>
                         <li id="task_B棟4F全部電盤數據盤點">
@@ -151,12 +156,12 @@
                     </select>
                 </div>
                 <div class="form-row">
-                    <div class="form-col"><label>❄️ 空調盤號 / kW</label><input type="text" id="f_ac_id" placeholder="盤號"><input type="number" step="0.01" id="f_ac_kw" placeholder="度數"></div>
-                    <div class="form-col"><label>💡 照明盤號 / kW</label><input type="text" id="f_light_id" placeholder="盤號"><input type="number" step="0.01" id="f_light_kw" placeholder="度數"></div>
+                    <div class="form-col"><label>❄️ 空調盤號/kW</label><input type="text" id="f_ac_id" placeholder="盤號"><input type="number" step="0.01" id="f_ac_kw" placeholder="kW"></div>
+                    <div class="form-col"><label>💡 照明盤號/kW</label><input type="text" id="f_light_id" placeholder="盤號"><input type="number" step="0.01" id="f_light_kw" placeholder="kW"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-col"><label>🔌 插座盤號 / kW</label><input type="text" id="f_plug_id" placeholder="盤號"><input type="number" step="0.01" id="f_plug_kw" placeholder="度數"></div>
-                    <div class="form-col"><label>⚙️ 動力盤號 / kW</label><input type="text" id="f_power_id" placeholder="盤號"><input type="number" step="0.01" id="f_power_kw" placeholder="度數"></div>
+                    <div class="form-col"><label>🔌 插座盤號/kW</label><input type="text" id="f_plug_id" placeholder="盤號"><input type="number" step="0.01" id="f_plug_kw" placeholder="kW"></div>
+                    <div class="form-col"><label>⚙️ 動力盤號/kW</label><input type="text" id="f_power_id" placeholder="盤號"><input type="number" step="0.01" id="f_power_kw" placeholder="kW"></div>
                 </div>
                 <div class="form-group"><label>⚠️ 現場備註 (可留空)</label><textarea id="f_notes" rows="2"></textarea></div>
                 <button type="submit" id="submitFullBtn" class="submit-btn">傳送盤點數據 🚀</button>
@@ -178,6 +183,6 @@
         </div>
     </div>
 
-    <script src="main.js?v=1.1"></script>
+    <script src="main.js"></script>
 </body>
 </html>
