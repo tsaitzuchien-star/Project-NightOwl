@@ -1,14 +1,12 @@
-// 1. 時鐘
 function updateClock() {
     const el = document.getElementById('clock');
     if (el) el.innerText = new Date().toLocaleTimeString('zh-TW', { hour12: false });
 }
 setInterval(updateClock, 1000); updateClock();
 
-// API 網址 (確認與 GAS 發佈網址一致)
+// ⚠️ 請替換為您「新增部署作業」後取得的 URL
 const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbwnQFPdzmCsn-8S2zHqPHTsojOrWd9h2buYqWhvycVrl8gQI4wzR6wnUC2e00wNP26ugA/exec";
 
-// 2. 初始化
 document.addEventListener('DOMContentLoaded', function() {
     loadRemoteData();
     try {
@@ -23,15 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (e) { console.error("Chart Error:", e); }
 });
 
-// 3. 讀取 Google 資料 (AI 摘要 + 任務檢查)
 window.loadRemoteData = function() {
     const summaryDiv = document.getElementById("aiReportSummary");
-    if (summaryDiv) summaryDiv.innerHTML = `<h4 style="color:var(--accent-green);">⏳ 同步資料庫並生成摘要中...</h4><ul><li>請稍候...</li></ul>`;
+    if (summaryDiv) summaryDiv.innerHTML = `<h4 style="color:var(--accent-green);">⏳ AI 正在同步資料庫並生成摘要中...</h4><ul><li>請稍候...</li></ul>`;
 
     fetch(GOOGLE_APP_URL)
         .then(r => r.json())
         .then(data => {
-            if(data.summary && summaryDiv) summaryDiv.innerHTML = `<h4 style="color:var(--accent-green);">⚡ AI 動態彙總</h4><ul>${data.summary}</ul>`;
+            if(data.summary && summaryDiv) summaryDiv.innerHTML = `<h4 style="color:var(--accent-green);">⚡ 戰情動態摘要 (AI 即時彙總)</h4><ul>${data.summary}</ul>`;
             if(data.completedTasks) {
                 data.completedTasks.forEach(name => {
                     let li = document.getElementById("task_" + name);
@@ -42,10 +39,9 @@ window.loadRemoteData = function() {
                     }
                 });
             }
-        }).catch(err => { if(summaryDiv) summaryDiv.innerHTML = `<ul><li><span style="color:var(--accent-red)">❌ 資料庫同步失敗</span></li></ul>`; });
+        }).catch(err => { if(summaryDiv) summaryDiv.innerHTML = `<ul><li><span style="color:var(--accent-red)">❌ 資料庫連線失敗 (請檢查網址或權限)</span></li></ul>`; });
 };
 
-// 4. 表單控制
 const fullModal = document.getElementById("fullReportModal");
 const simpleModal = document.getElementById("simpleTaskModal");
 let currentTaskName = "";
@@ -56,11 +52,10 @@ window.closeSimpleModal = () => { simpleModal.style.display = "none"; };
 
 window.openSimpleTaskModal = function(taskName) {
     currentTaskName = taskName;
-    document.getElementById("simpleTaskBadge").innerHTML = "📌 <b>回報任務：</b>" + taskName;
+    document.getElementById("simpleTaskBadge").innerHTML = "📌 <b>任務：</b>" + taskName;
     simpleModal.style.display = "flex";
 };
 
-// 提交處理
 document.getElementById("fullAuditForm").onsubmit = function(e) {
     e.preventDefault();
     const btn = document.getElementById("submitFullBtn");
@@ -90,3 +85,5 @@ function sendData(payload, modal, btn, originalText) {
         alert("✅ 匯報成功！"); modal.style.display = "none"; loadRemoteData();
     }).catch(err => alert("⚠️ 傳送失敗")).finally(() => { btn.disabled = false; btn.innerText = originalText; });
 }
+// 每 5 分鐘自動刷新
+setInterval(loadRemoteData, 300000);
