@@ -2,7 +2,8 @@ function updateClock() {
     const el = document.getElementById('clock');
     if (el) el.innerText = new Date().toLocaleTimeString('zh-TW', { hour12: false });
 }
-setInterval(updateClock, 1000); updateClock();
+setInterval(updateClock, 1000); 
+updateClock();
 
 const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbxQCt01F5QWVtSN3n7ARKDXrEViCE8IdgCYnFo3Fu41ZvmAsf-eKYpcn-C0cU20L50Dhg/exec";
 
@@ -21,13 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.loadRemoteData = function() {
-    const summaryDiv = document.getElementById("aiReportSummary");
-    if (summaryDiv) summaryDiv.innerHTML = `<h4 style="color:var(--accent-green);">⏳ 同步資料庫並生成摘要中...</h4><ul><li>請稍候...</li></ul>`;
-
     fetch(GOOGLE_APP_URL)
         .then(r => r.json())
         .then(data => {
-            if(data.summary && summaryDiv) summaryDiv.innerHTML = `<h4 style="color:var(--accent-green);">⚡ AI 動態彙總</h4><ul>${data.summary}</ul>`;
             if(data.completedTasks) {
                 data.completedTasks.forEach(name => {
                     let li = document.getElementById("task_" + name);
@@ -38,7 +35,9 @@ window.loadRemoteData = function() {
                     }
                 });
             }
-        }).catch(err => { if(summaryDiv) summaryDiv.innerHTML = `<ul><li><span style="color:var(--accent-red)">❌ 資料庫同步失敗</span></li></ul>`; });
+        }).catch(err => { 
+            console.error("資料庫同步失敗", err); 
+        });
 };
 
 const fullModal = document.getElementById("fullReportModal");
@@ -81,6 +80,11 @@ document.getElementById("simpleTaskForm").onsubmit = function(e) {
 function sendData(payload, modal, btn, originalText) {
     fetch(GOOGLE_APP_URL, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(payload) })
     .then(r => r.json()).then(data => {
-        alert("✅ 匯報成功！"); modal.style.display = "none"; loadRemoteData();
-    }).catch(err => alert("⚠️ 傳送失敗")).finally(() => { btn.disabled = false; btn.innerText = originalText; });
+        alert("✅ 匯報成功！"); 
+        modal.style.display = "none"; 
+        loadRemoteData();
+    }).catch(err => alert("⚠️ 傳送失敗")).finally(() => { 
+        btn.disabled = false; 
+        btn.innerText = originalText; 
+    });
 }
