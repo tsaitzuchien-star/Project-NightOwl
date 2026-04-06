@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+<!DOCTYPE html><html lang="zh-TW"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中創園區 - 夜間電力盤查戰情室</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=20260405-2">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css?v=20260405-no-ai"></head><body>
     <div class="header">
         <h1>⚡ 中創園區夜間電力盤查戰情室 (目標基載：132 kW)</h1>
         <div class="header-right">
@@ -63,20 +59,9 @@
     <div class="bottom-section">
         <div class="chart-card">
             <div class="chart-title" style="display: flex; justify-content: space-between; align-items: center;">
-                <span>🗣️ 戰情動態摘要 (AI 即時彙總)</span>
-                <button onclick="loadRemoteData()" style="background:none; border:none; color:var(--accent-blue); cursor:pointer;" title="同步資料庫">🔄</button>
+                <span>🎯 同仁行動清單 (任務回報即時追蹤)</span>
+                <button onclick="loadRemoteData()" style="background:none; border:none; color:var(--accent-blue); cursor:pointer;" title="同步資料庫">🔄 同步任務狀態</button>
             </div>
-            <div class="report-content" id="aiReportSummary">
-                <h4 style="color:var(--accent-green);">📊 目前關鍵發現彙整</h4>
-                <ul>
-                    <li><strong>管理節能成果：</strong> 已識別公設區 31 台排風機具備 <strong>12kW</strong> 停機節能空間。</li>
-                    <li><strong>租戶耗電監控：</strong> B 棟 3F <strong>美時製藥</strong> 夜間基載高達 14.5kW (異常偏高)。</li>
-                    <li><strong>硬體優化建議：</strong> 頂樓 5.5kW 水泵實測功耗 <strong>6.8kW (超載運轉)</strong>，具變頻優化潛力。</li>
-                </ul>
-            </div>
-        </div>
-        <div class="chart-card">
-            <div class="chart-title">🎯 同仁行動清單 (任務回報即時追蹤)</div>
             <div class="action-content">
                 <div class="action-group">
                     <div class="action-header">🚨 待確認之異常與跨單位聯繫</div>
@@ -163,12 +148,10 @@
             <form id="simpleTaskForm">
                 <div class="form-group">
                     <label style="font-size:15px; color:var(--accent-yellow);">✍️ 任務執行結果 (必填)</label>
-                    <textarea id="t_notes" rows="4" placeholder="請簡述您的處理狀況，AI 會自動幫您修正錯字與潤飾..." required></textarea>
+                    <textarea id="t_notes" rows="4" placeholder="請簡述您的處理狀況..." required></textarea>
                 </div>
                 <button type="submit" id="submitSimpleBtn" class="submit-btn">送出任務回報 ⚡</button>
             </form>
         </div>
     </div>
-    <script src="main.js?v=20260405-3"></script>
-</body>
-</html>
+    <script src="main.js?v=20260405-no-ai"></script></body></html>
