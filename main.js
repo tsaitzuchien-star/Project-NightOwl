@@ -5,7 +5,7 @@ function updateClock() {
 }
 setInterval(updateClock, 1000); updateClock();
 
-// 您的 API 網址 (已幫您填入最新版)
+// API 網址
 const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbwnQFPdzmCsn-8S2zHqPHTsojOrWd9h2buYqWhvycVrl8gQI4wzR6wnUC2e00wNP26ugA/exec";
 
 // 2. 初始化
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (e) { console.error("Chart Error:", e); }
 });
 
-// 3. 讀取資料 (包含任務打勾與動態矩陣更新，不含 AI)
+// 3. 讀取資料 (動態填入矩陣 + 任務打勾)
 window.loadRemoteData = function() {
     fetch(GOOGLE_APP_URL)
         .then(r => r.json())
