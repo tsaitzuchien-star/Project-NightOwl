@@ -1,6 +1,17 @@
+// 1. 時鐘 (加入日期顯示)
 function updateClock() {
     const el = document.getElementById('clock');
-    if (el) el.innerText = new Date().toLocaleTimeString('zh-TW', { hour12: false });
+    if (el) {
+        const now = new Date();
+        const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        
+        // 格式化日期與時間，並用空白隔開
+        const dateString = now.toLocaleDateString('zh-TW', dateOptions);
+        const timeString = now.toLocaleTimeString('zh-TW', timeOptions);
+        
+        el.innerText = `${dateString} ${timeString}`;
+    }
 }
 setInterval(updateClock, 1000); updateClock();
 
