@@ -5,7 +5,7 @@ function updateClock() {
 }
 setInterval(updateClock, 1000); updateClock();
 
-// API 網址
+// 您的 API 網址 (確認與 GAS 發佈網址一致)
 const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbwnQFPdzmCsn-8S2zHqPHTsojOrWd9h2buYqWhvycVrl8gQI4wzR6wnUC2e00wNP26ugA/exec";
 
 // 2. 初始化
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (e) { console.error("Chart Error:", e); }
 });
 
-// 3. 讀取資料 (動態填入矩陣 + 任務打勾)
+// 3. 讀取資料 (包含任務打勾與動態矩陣更新，不含 AI)
 window.loadRemoteData = function() {
     fetch(GOOGLE_APP_URL)
         .then(r => r.json())
@@ -80,10 +80,12 @@ window.loadRemoteData = function() {
         }).catch(err => console.log("同步延遲或失敗", err));
 };
 
-// 輔助函數：負責畫出 ✅ 或 ❌ 的標籤
+// 輔助函數：負責畫出 ✅ 或 ❌ 的標籤 (已支援 0 kW 關機狀態)
 function updateCellUI(td, id, kw) {
     if(!td) return;
-    if(kw !== "" && kw !== null && kw !== undefined && parseFloat(kw) > 0) {
+    
+    // 只要不是空值，且轉換為數字後「大於等於 0」(包含 0)
+    if(kw !== "" && kw !== null && kw !== undefined && !isNaN(parseFloat(kw)) && parseFloat(kw) >= 0) {
         td.innerHTML = `✅<div class="panel-tag fill">盤號: ${id || '未填'}</div><div style="font-weight:bold; margin-top:2px;">${parseFloat(kw).toFixed(2)} kW</div>`;
     } else {
         td.innerHTML = `❌<div class="panel-tag empty">盤號: ❌</div>`;
