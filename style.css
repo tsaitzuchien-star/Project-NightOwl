@@ -19,17 +19,21 @@ body { background-color: var(--bg-color); color: var(--text-primary); font-famil
 
 /* Summary Section */
 .summary-section { display: flex; gap: 20px; margin-bottom: 20px; }
-.total-power-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--accent-blue); border-radius: 12px; padding: 20px; min-width: 180px; text-align: center; }
-.big-number { font-size: 42px; font-weight: bold; }
+
+/* 👇 修正 1：讓左側「夜間總基載」大卡片完美垂直置中 */
+.total-power-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--accent-blue); border-radius: 12px; padding: 20px; min-width: 180px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.total-power-card h2 { margin: 0 0 10px 0; font-size: 22px; }
+.big-number { font-size: 42px; font-weight: bold; line-height: 1; }
 .big-number span { font-size: 16px; color: var(--accent-blue); }
+
 .category-breakdown { background: var(--card-bg); border-radius: 12px; flex: 1; min-height: 180px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); }
 .category-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 2; }
 
-/* --- 👇 這裡修改了卡片的垂直對齊方式，從 space-between 改成了 space-around --- */
-.cat-card { background: var(--card-bg); border-radius: 10px; padding: 12px; border-left: 5px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-around; align-items: center; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+/* 👇 修正 2：確保右側四個小卡片也完美垂直置中 */
+.cat-card { background: var(--card-bg); border-radius: 10px; padding: 12px; border-left: 5px solid var(--border-color); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 8px; border: 1px solid rgba(255,255,255,0.05); }
 .cat-lab { border-left-color: var(--accent-yellow); } .cat-ac { border-left-color: var(--accent-blue); }
 .cat-plug { border-left-color: var(--accent-green); } .cat-light { border-left-color: var(--accent-pink); }
-.cat-value { font-size: 24px; font-weight: bold; margin: 8px 0; }
+.cat-value { font-size: 24px; font-weight: bold; margin: 0; }
 
 /* Matrix Table */
 .chart-card { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); }
