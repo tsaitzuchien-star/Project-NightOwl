@@ -24,10 +24,12 @@ body { background-color: var(--bg-color); color: var(--text-primary); font-famil
 .big-number span { font-size: 16px; color: var(--accent-blue); }
 .category-breakdown { background: var(--card-bg); border-radius: 12px; flex: 1; min-height: 180px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); }
 .category-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 2; }
-.cat-card { background: var(--card-bg); border-radius: 10px; padding: 12px; border-left: 5px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); }
+
+/* --- 👇 這裡修改了卡片的垂直對齊方式，從 space-between 改成了 space-around --- */
+.cat-card { background: var(--card-bg); border-radius: 10px; padding: 12px; border-left: 5px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-around; align-items: center; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
 .cat-lab { border-left-color: var(--accent-yellow); } .cat-ac { border-left-color: var(--accent-blue); }
 .cat-plug { border-left-color: var(--accent-green); } .cat-light { border-left-color: var(--accent-pink); }
-.cat-value { font-size: 24px; font-weight: bold; }
+.cat-value { font-size: 24px; font-weight: bold; margin: 8px 0; }
 
 /* Matrix Table */
 .chart-card { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); }
@@ -41,7 +43,7 @@ body { background-color: var(--bg-color); color: var(--text-primary); font-famil
 .panel-tag.fill { color: var(--accent-green); border: 1px solid var(--accent-green); }
 .bldg-name { font-weight: bold; color: var(--accent-blue); background: rgba(59, 130, 246, 0.05); }
 
-/* --- 放大版的小計欄位 --- */
+/* 放大版的小計欄位 */
 .kw-total { 
     font-size: 16px; 
     font-weight: 900; 
@@ -64,7 +66,7 @@ body { background-color: var(--bg-color); color: var(--text-primary); font-famil
 .task-btn { background: transparent; border: 1px solid var(--accent-yellow); color: var(--accent-yellow); padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; white-space: nowrap; margin-left: 15px; margin-top: 2px; }
 .task-btn:hover { background: var(--accent-yellow); color: var(--bg-color); }
 
-/* --- 結案與回報對話框樣式 --- */
+/* 結案與回報對話框樣式 */
 .task-completed { border-left-color: var(--accent-green) !important; background: rgba(16, 185, 129, 0.05) !important; }
 .task-completed .task-title-row { color: var(--accent-green); opacity: 0.8; }
 .task-reply { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; font-size: 13px; color: #cbd5e1; border-left: 2px solid var(--accent-green); margin-top: 4px; line-height: 1.4; }
