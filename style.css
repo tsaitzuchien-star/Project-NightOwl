@@ -20,19 +20,46 @@ body { background-color: var(--bg-color); color: var(--text-primary); font-famil
 /* Summary Section */
 .summary-section { display: flex; gap: 20px; margin-bottom: 20px; }
 
-.total-power-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--accent-blue); border-radius: 12px; padding: 20px; min-width: 180px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
-.total-power-card h2 { margin: 0; font-size: 22px; }
-.big-number { margin: 0; font-size: 42px; font-weight: bold; line-height: 1; }
-.big-number span { font-size: 16px; color: var(--accent-blue); }
+/* --- 👇 夜間總基載卡片基本設定 --- */
+.total-power-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--accent-blue); border-radius: 12px; padding: 20px; min-width: 180px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; transition: all 0.5s ease; }
+.total-power-card h2 { margin: 0; font-size: 22px; transition: color 0.5s ease; }
+.big-number { margin: 0; font-size: 48px; font-weight: bold; line-height: 1; color: #f8fafc; transition: color 0.5s ease; }
+.big-number span:last-child { font-size: 18px; color: var(--accent-blue); margin-left: 5px; font-weight: bold; transition: color 0.5s ease; }
 
+/* --- 🚨 嚴重超標 警戒模式 (Danger Mode) --- */
+.total-power-card.danger-mode {
+    background: linear-gradient(135deg, #450a0a 0%, #170505 100%);
+    border: 2px solid var(--accent-red);
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+}
+.total-power-card.danger-mode h2 { color: #fca5a5; }
+.total-power-card.danger-mode .big-number { color: #f87171; }
+.total-power-card.danger-mode .big-number span:last-child { color: #fca5a5; }
+
+/* 超標閃爍呼吸標籤 */
+.target-alert {
+    background-color: var(--accent-red);
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 8px;
+    margin-top: 5px;
+    letter-spacing: 1px;
+    animation: pulseAlert 1.5s infinite;
+}
+@keyframes pulseAlert {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    50% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* Category Cards */
 .category-breakdown { background: var(--card-bg); border-radius: 12px; flex: 1; min-height: 180px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); padding: 10px; box-sizing: border-box; }
 .category-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 2; }
-
-/* 👇 修正：四個小卡片的雙層對齊樣式 */
 .cat-card { background: var(--card-bg); border-radius: 10px; padding: 12px; border-left: 5px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-around; align-items: center; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
 .cat-lab { border-left-color: var(--accent-yellow); } .cat-ac { border-left-color: var(--accent-blue); }
 .cat-plug { border-left-color: var(--accent-green); } .cat-light { border-left-color: var(--accent-pink); }
-
 .cat-title { font-size: 15px; font-weight: bold; color: var(--text-primary); }
 .cat-value { margin: 5px 0; }
 .target-kw { font-size: 13px; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 3px; margin-bottom: 4px; }
@@ -52,46 +79,29 @@ body { background-color: var(--bg-color); color: var(--text-primary); font-famil
 .panel-tag.fill { color: var(--accent-green); border: 1px solid var(--accent-green); }
 .bldg-name { font-weight: bold; color: var(--accent-blue); background: rgba(59, 130, 246, 0.05); }
 
-/* 放大版的小計欄位 */
-.kw-total { 
-    font-size: 16px; 
-    font-weight: 900; 
-    color: #f8fafc; 
-    background-color: rgba(59, 130, 246, 0.15); 
-    border-left: 2px solid var(--accent-blue);
-    min-width: 60px;
-}
+.kw-total { font-size: 16px; font-weight: 900; color: #f8fafc; background-color: rgba(59, 130, 246, 0.15); border-left: 2px solid var(--accent-blue); min-width: 60px; }
 
 /* Bottom Action List */
 .bottom-section { display: grid; grid-template-columns: 1fr; gap: 20px; }
 .action-content { display: flex; gap: 30px; }
 .action-group { flex: 1; }
 .action-header { font-size: 15px; font-weight: bold; color: var(--accent-yellow); margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border-color); }
-
 .interactive-list { list-style: none; padding: 0; margin: 0; }
 .interactive-list li { display: flex; justify-content: space-between; align-items: flex-start; background: rgba(255,255,255,0.03); padding: 12px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid var(--accent-yellow); transition: 0.3s; flex-direction: row; }
 .task-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
 .task-title-row { font-size: 14px; color: var(--text-primary); }
 .task-btn { background: transparent; border: 1px solid var(--accent-yellow); color: var(--accent-yellow); padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; white-space: nowrap; margin-left: 15px; margin-top: 2px; }
 .task-btn:hover { background: var(--accent-yellow); color: var(--bg-color); }
-
-/* 結案與回報對話框樣式 */
 .task-completed { border-left-color: var(--accent-green) !important; background: rgba(16, 185, 129, 0.05) !important; }
 .task-completed .task-title-row { color: var(--accent-green); opacity: 0.8; }
 .task-reply { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; font-size: 13px; color: #cbd5e1; border-left: 2px solid var(--accent-green); margin-top: 4px; line-height: 1.4; }
 
-/* Modals */
+/* Modals & Forms */
 .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
 .modal-content { background: var(--card-bg); border: 1px solid var(--accent-blue); border-radius: 16px; width: 90%; max-width: 550px; padding: 25px; position: relative; }
 .simple-modal { border-color: var(--accent-yellow); max-width: 400px; }
 .close-btn { position: absolute; right: 20px; top: 20px; font-size: 24px; cursor: pointer; color: var(--text-secondary); }
-
-/* Form Elements */
-input, select, textarea { 
-    background-color: #0f172a !important; color: white !important; 
-    border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; 
-    width: 100%; box-sizing: border-box; outline: none; margin-top: 5px;
-}
+input, select, textarea { background-color: #0f172a !important; color: white !important; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; width: 100%; box-sizing: border-box; outline: none; margin-top: 5px; }
 .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
 .form-col { flex: 1; display: flex; flex-direction: column; }
 label { font-size: 13px; color: var(--text-secondary); font-weight: bold; }
