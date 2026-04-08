@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>中創園區 - 夜間電力盤查戰情室</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=20260408-1">
+    <link rel="stylesheet" href="style.css?v=20260408-alert">
 </head>
 <body>
 
@@ -18,10 +18,12 @@
     </div>
 
     <div class="summary-section">
-        <div class="total-power-card">
+        <div class="total-power-card" id="total-card">
             <h2>夜間總基載</h2>
             <div class="big-number"><span id="grand-total-display">0.00</span> <span>kW</span></div>
+            <div id="target-alert" class="target-alert" style="display: none;">⚠️ 嚴重超標 (目標: 132 kW)</div>
         </div>
+        
         <div class="category-breakdown">
             <canvas id="doughnutChart"></canvas>
         </div>
@@ -166,6 +168,6 @@
         </div>
     </div>
 
-    <script src="main.js?v=20260408-1"></script>
+    <script src="main.js?v=20260408-alert"></script>
 </body>
 </html>
