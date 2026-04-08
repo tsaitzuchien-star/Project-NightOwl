@@ -109,11 +109,27 @@ window.loadRemoteData = function() {
         }).catch(err => console.log("同步失敗", err));
 };
 
+// 輔助函數：負責畫出 ✅ 或 ⚠️ 或 ❌ 的標籤 (支援 20kW 自動警示)
 function updateCellUI(td, id, kw) {
     if(!td) return;
-    if(kw !== "" && kw !== null && kw !== undefined && !isNaN(parseFloat(kw)) && parseFloat(kw) >= 0) {
-        td.innerHTML = `✅<div class="panel-tag fill">盤號: ${id || '未填'}</div><div style="font-weight:bold; margin-top:2px;">${parseFloat(kw).toFixed(2)} kW</div>`;
+    
+    let val = parseFloat(kw);
+    
+    // 檢查是否有數值且大於等於 0
+    if(kw !== "" && kw !== null && kw !== undefined && !isNaN(val) && val >= 0) {
+        
+        if (val > 20) {
+            // 異常預警 (>20kW)：黃色驚嘆號與警告樣式
+            td.innerHTML = `⚠️<div class="panel-tag warning" style="color:var(--accent-yellow); border:1px solid var(--accent-yellow); background:rgba(245, 158, 11, 0.1);">盤號: ${id || '未填'}</div>
+                            <div style="font-weight:bold; margin-top:2px; color:var(--accent-yellow);">${val.toFixed(2)} kW</div>`;
+        } else {
+            // 正常數值：綠色打勾
+            td.innerHTML = `✅<div class="panel-tag fill">盤號: ${id || '未填'}</div>
+                            <div style="font-weight:bold; margin-top:2px;">${val.toFixed(2)} kW</div>`;
+        }
+        
     } else {
+        // 未填寫：紅色叉叉
         td.innerHTML = `❌<div class="panel-tag empty">盤號: ❌</div>`;
     }
 }
