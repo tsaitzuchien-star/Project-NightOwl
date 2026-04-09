@@ -90,8 +90,7 @@
                         <tr data-area="C棟 2F"><td>2F</td><td class="col-ac">--</td><td class="col-light">--</td><td class="col-plug">--</td><td class="col-power">--</td><td class="kw-total">--</td></tr>
                         <tr data-area="C棟 1F"><td>1F</td><td class="col-ac">--</td><td class="col-light">--</td><td class="col-plug">--</td><td class="col-power">--</td><td class="kw-total">--</td></tr>
 
-                        <tr data-area="車道照明"><td rowspan="2" class="bldg-name">地下室</td><td>車道照明</td><td class="col-ac">--</td><td class="col-light">--</td><td class="col-plug">--</td><td class="col-power">--</td><td class="kw-total">--</td></tr>
-                        <tr data-area="空壓機房"><td>空壓機房</td><td class="col-ac">--</td><td class="col-light">--</td><td class="col-plug">--</td><td class="col-power">--</td><td class="kw-total">--</td></tr>
+                        <tr data-area="車道照明"><td class="bldg-name">地下室</td><td>車道照明</td><td class="col-ac">--</td><td class="col-light">--</td><td class="col-plug">--</td><td class="col-power">--</td><td class="kw-total">--</td></tr>
 
                         <tr class="total-row"><td colspan="6" class="total-label">目前已知盤點加總：</td><td class="total-value" style="font-size: 20px; font-weight: 900; color: #10b981;">0.00</td></tr>
                     </tbody>
@@ -104,7 +103,7 @@
         <div class="chart-card">
             <div class="chart-title" style="display: flex; justify-content: space-between; align-items: center;">
                 <span>🎯 同仁行動清單 (由「任務清單」分頁即時同步)</span>
-                <button onclick="loadRemoteData()" style="background:none; border:none; color:var(--accent-blue); cursor:pointer; font-size:18px;" title="同步資料庫">🔄</button>
+                <button id="syncBtn" style="background:none; border:none; color:var(--accent-blue); cursor:pointer; font-size:18px;" title="同步資料庫">🔄</button>
             </div>
             <div class="action-content" id="dynamicTaskContainer" style="display: flex; gap: 30px; flex-wrap: wrap;">
                 <div style="color:var(--text-secondary); padding: 10px;">⏳ 正在連線讀取任務清單...</div>
@@ -136,7 +135,7 @@
                             <option value="C棟 3F">C棟 3F</option><option value="C棟 2F">C棟 2F</option><option value="C棟 1F">C棟 1F</option>
                         </optgroup>
                         <optgroup label="地下室">
-                            <option value="車道照明">車道照明</option><option value="空壓機房">空壓機房</option>
+                            <option value="車道照明">車道照明</option>
                         </optgroup>
                     </select>
                 </div>
@@ -168,6 +167,6 @@
         </div>
     </div>
 
-    <script src="main.js?v=20260408-alert"></script>
+    <script src="main.js?v=20260409-update"></script>
 </body>
 </html>
