@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 綁定「同步」按鈕與旋轉特效
     const syncBtn = document.querySelector('button[title="同步資料庫"]');
     if (syncBtn) {
-        syncBtn.removeAttribute('onclick'); // 移除舊的 HTML 綁定
+        syncBtn.removeAttribute('onclick'); 
         syncBtn.addEventListener('click', function() {
             this.style.transform = "rotate(180deg)";
             this.style.transition = "transform 0.3s ease";
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.loadRemoteData = function() {
-    // 🌟 核心修正：加上時間戳記，強迫瀏覽器「不要使用舊快取」
+    // 強制打破快取機制
     const noCacheUrl = GOOGLE_APP_URL + "?t=" + new Date().getTime();
 
     fetch(noCacheUrl)
@@ -64,7 +64,10 @@ window.loadRemoteData = function() {
                     groups[cat].forEach(task => {
                         let isDone = (task.status === '已結案');
                         let liClass = isDone ? "task-completed" : "";
-                        let checkMark = isDone ? "[✅]" : "[ ]";
+                        
+                        // 👇 這裡將未完成的符號改成 [❌]
+                        let checkMark = isDone ? "[✅]" : "[❌]";
+                        
                         html += `<li class="${liClass}">
                                     <div class="task-info">
                                         <div class="task-title-row"><span class="checkbox-mark">${checkMark}</span> <strong>${task.name}</strong></div>
