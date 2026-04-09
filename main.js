@@ -43,7 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.loadRemoteData = function() {
-    fetch(GOOGLE_APP_URL)
+    // 🌟 核心修正：加上時間戳記，強迫瀏覽器「不要使用舊快取」
+    const noCacheUrl = GOOGLE_APP_URL + "?t=" + new Date().getTime();
+
+    fetch(noCacheUrl)
         .then(r => r.json())
         .then(data => {
             // --- A. 動態渲染任務清單 ---
@@ -93,7 +96,6 @@ window.loadRemoteData = function() {
                         let power_val = parseFloat(dbData.power_kw);
                         let subtotal = 0;
                         
-                        // 只計算有填寫且非 NaN 的值
                         if(!isNaN(ac_val)) { sums.ac += ac_val; counts.ac++; subtotal += ac_val; }
                         if(!isNaN(light_val)) { sums.light += light_val; counts.light++; subtotal += light_val; }
                         if(!isNaN(plug_val)) { sums.plug += plug_val; counts.plug++; subtotal += plug_val; }
@@ -116,7 +118,6 @@ window.loadRemoteData = function() {
                     }
                 });
 
-                // 更新大字體總數
                 let finalTotalEl = document.querySelector('.total-value');
                 let grandDisplayEl = document.getElementById('grand-total-display');
                 if(finalTotalEl) finalTotalEl.innerText = grandTotalKw.toFixed(2);
@@ -135,7 +136,6 @@ window.loadRemoteData = function() {
                     }
                 }
 
-                // 更新四個小卡片的動態數據與進度 %
                 let sumPowerEl = document.getElementById('sum-power');
                 let sumAcEl = document.getElementById('sum-ac');
                 let sumPlugEl = document.getElementById('sum-plug');
@@ -193,7 +193,6 @@ window.openSimpleTaskModal = function(taskName) {
     simpleModal.style.display = "flex";
 };
 
-// 傳送例行盤點 (不再阻擋負數)
 document.getElementById("fullAuditForm").onsubmit = function(e) {
     e.preventDefault();
     const btn = document.getElementById("submitFullBtn");
@@ -211,7 +210,6 @@ document.getElementById("fullAuditForm").onsubmit = function(e) {
     sendData(payload, fullModal, btn, "傳送盤點數據 🚀");
 };
 
-// 傳送任務結案
 document.getElementById("simpleTaskForm").onsubmit = function(e) {
     e.preventDefault();
     const btn = document.getElementById("submitSimpleBtn");
