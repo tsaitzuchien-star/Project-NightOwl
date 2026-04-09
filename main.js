@@ -64,8 +64,6 @@ window.loadRemoteData = function() {
                     groups[cat].forEach(task => {
                         let isDone = (task.status === '已結案');
                         let liClass = isDone ? "task-completed" : "";
-                        
-                        // 👇 這裡將未完成的符號改成 [❌]
                         let checkMark = isDone ? "[✅]" : "[❌]";
                         
                         html += `<li class="${liClass}">
@@ -86,7 +84,9 @@ window.loadRemoteData = function() {
                 let grandTotalKw = 0;
                 let sums = { ac: 0, light: 0, plug: 0, power: 0 };
                 let counts = { ac: 0, light: 0, plug: 0, power: 0 };
-                const TOTAL_ZONES = 19;
+                
+                // 👇 修正：移除空壓機房後，總區域數量降為 18
+                const TOTAL_ZONES = 18;
 
                 document.querySelectorAll("tr[data-area]").forEach(tr => {
                     let areaName = tr.getAttribute("data-area");
