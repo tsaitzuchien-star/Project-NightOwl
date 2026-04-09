@@ -5,12 +5,7 @@ function updateClock() {
         const now = new Date();
         const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
         const timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        
-        // 格式化日期與時間，並用空白隔開
-        const dateString = now.toLocaleDateString('zh-TW', dateOptions);
-        const timeString = now.toLocaleTimeString('zh-TW', timeOptions);
-        
-        el.innerText = `${dateString} ${timeString}`;
+        el.innerText = `${now.toLocaleDateString('zh-TW', dateOptions)} ${now.toLocaleTimeString('zh-TW', timeOptions)}`;
     }
 }
 setInterval(updateClock, 1000); updateClock();
@@ -22,13 +17,24 @@ const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbwnQFPdzmCsn-8S2
 window.powerChart = null;
 
 document.addEventListener('DOMContentLoaded', function() {
+    // 綁定「同步」按鈕與旋轉特效
+    const syncBtn = document.querySelector('button[title="同步資料庫"]');
+    if (syncBtn) {
+        syncBtn.removeAttribute('onclick'); // 移除舊的 HTML 綁定
+        syncBtn.addEventListener('click', function() {
+            this.style.transform = "rotate(180deg)";
+            this.style.transition = "transform 0.3s ease";
+            loadRemoteData();
+            setTimeout(() => { this.style.transform = "rotate(0deg)"; }, 300);
+        });
+    }
+
     loadRemoteData();
     try {
         const canvas = document.getElementById('doughnutChart');
         if (canvas && typeof Chart !== 'undefined') {
             window.powerChart = new Chart(canvas.getContext('2d'), {
                 type: 'doughnut',
-                // 初始數值設為 0，等資料回來後動態填入
                 data: { labels: ['動力', '空調', '插座', '照明'], datasets: [{ data: [0, 0, 0, 0], backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ec4899'], borderWidth: 0 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#f8fafc' } } } }
             });
@@ -72,11 +78,9 @@ window.loadRemoteData = function() {
             // --- B. 處理矩陣數據 & 動態卡片計算 ---
             if(data.matrixData) {
                 let grandTotalKw = 0;
-                
-                // 用來統計動態進度與四大分類的總和
                 let sums = { ac: 0, light: 0, plug: 0, power: 0 };
                 let counts = { ac: 0, light: 0, plug: 0, power: 0 };
-                const TOTAL_ZONES = 19; // 總共 19 個區域
+                const TOTAL_ZONES = 19;
 
                 document.querySelectorAll("tr[data-area]").forEach(tr => {
                     let areaName = tr.getAttribute("data-area");
@@ -89,11 +93,11 @@ window.loadRemoteData = function() {
                         let power_val = parseFloat(dbData.power_kw);
                         let subtotal = 0;
                         
-                        // 計算有效盤點次數與分類加總
-                        if(!isNaN(ac_val) && ac_val >= 0) { sums.ac += ac_val; counts.ac++; subtotal += ac_val; }
-                        if(!isNaN(light_val) && light_val >= 0) { sums.light += light_val; counts.light++; subtotal += light_val; }
-                        if(!isNaN(plug_val) && plug_val >= 0) { sums.plug += plug_val; counts.plug++; subtotal += plug_val; }
-                        if(!isNaN(power_val) && power_val >= 0) { sums.power += power_val; counts.power++; subtotal += power_val; }
+                        // 只計算有填寫且非 NaN 的值
+                        if(!isNaN(ac_val)) { sums.ac += ac_val; counts.ac++; subtotal += ac_val; }
+                        if(!isNaN(light_val)) { sums.light += light_val; counts.light++; subtotal += light_val; }
+                        if(!isNaN(plug_val)) { sums.plug += plug_val; counts.plug++; subtotal += plug_val; }
+                        if(!isNaN(power_val)) { sums.power += power_val; counts.power++; subtotal += power_val; }
 
                         grandTotalKw += subtotal;
 
@@ -103,7 +107,7 @@ window.loadRemoteData = function() {
                         updateCellUI(tr.querySelector('.col-power'), dbData.power_id, dbData.power_kw);
 
                         let totalTd = tr.querySelector('.kw-total');
-                        if(totalTd) totalTd.innerText = subtotal > 0 ? subtotal.toFixed(2) : '0.00';
+                        if(totalTd) totalTd.innerText = subtotal !== 0 ? subtotal.toFixed(2) : '0.00';
                     } else {
                         updateCellUI(tr.querySelector('.col-ac'), "", "");
                         updateCellUI(tr.querySelector('.col-light'), "", "");
@@ -112,13 +116,13 @@ window.loadRemoteData = function() {
                     }
                 });
 
-                // --- 1. 更新大字體總數 ---
+                // 更新大字體總數
                 let finalTotalEl = document.querySelector('.total-value');
                 let grandDisplayEl = document.getElementById('grand-total-display');
                 if(finalTotalEl) finalTotalEl.innerText = grandTotalKw.toFixed(2);
                 if(grandDisplayEl) grandDisplayEl.innerText = grandTotalKw.toFixed(1);
 
-                // --- 2. 🚨 總基載超標 132kW 警報觸發邏輯 ---
+                // 🚨 總基載超標 132kW 警報觸發邏輯
                 let totalCard = document.getElementById('total-card');
                 let targetAlert = document.getElementById('target-alert');
                 if (totalCard && targetAlert) {
@@ -131,7 +135,7 @@ window.loadRemoteData = function() {
                     }
                 }
 
-                // --- 3. 更新四個小卡片的動態數據與進度 % ---
+                // 更新四個小卡片的動態數據與進度 %
                 let sumPowerEl = document.getElementById('sum-power');
                 let sumAcEl = document.getElementById('sum-ac');
                 let sumPlugEl = document.getElementById('sum-plug');
@@ -150,7 +154,6 @@ window.loadRemoteData = function() {
                 if(progPlugEl) progPlugEl.innerText = '盤點進度 ' + Math.round((counts.plug / TOTAL_ZONES) * 100) + '%';
                 if(progLightEl) progLightEl.innerText = '盤點進度 ' + Math.round((counts.light / TOTAL_ZONES) * 100) + '%';
 
-                // --- 4. 動態更新圓餅圖 ---
                 if (window.powerChart) {
                     window.powerChart.data.datasets[0].data = [sums.power, sums.ac, sums.plug, sums.light];
                     window.powerChart.update();
@@ -159,28 +162,23 @@ window.loadRemoteData = function() {
         }).catch(err => console.log("同步失敗", err));
 };
 
-// 輔助函數：負責畫出 ✅ 或 ⚠️ 或 ❌ 的標籤 (支援 20kW 自動警示)
 function updateCellUI(td, id, kw) {
     if(!td) return;
     let val = parseFloat(kw);
-    // 檢查是否有數值且大於等於 0
-    if(kw !== "" && kw !== null && kw !== undefined && !isNaN(val) && val >= 0) {
-        if (val > 20) {
-            // 異常預警 (>20kW)：黃色驚嘆號與警告樣式
+    
+    if(kw !== "" && kw !== null && kw !== undefined && !isNaN(val)) {
+        if (val > 20 || val < 0) {
             td.innerHTML = `⚠️<div class="panel-tag warning" style="color:var(--accent-yellow); border:1px solid var(--accent-yellow); background:rgba(245, 158, 11, 0.1);">盤號: ${id || '未填'}</div>
                             <div style="font-weight:bold; margin-top:2px; color:var(--accent-yellow);">${val.toFixed(2)} kW</div>`;
         } else {
-            // 正常數值：綠色打勾
             td.innerHTML = `✅<div class="panel-tag fill">盤號: ${id || '未填'}</div>
                             <div style="font-weight:bold; margin-top:2px;">${val.toFixed(2)} kW</div>`;
         }
     } else {
-        // 未填寫：紅色叉叉
         td.innerHTML = `❌<div class="panel-tag empty">盤號: ❌</div>`;
     }
 }
 
-// 4. 表單功能
 const fullModal = document.getElementById("fullReportModal");
 const simpleModal = document.getElementById("simpleTaskModal");
 let currentTaskName = "";
@@ -195,10 +193,11 @@ window.openSimpleTaskModal = function(taskName) {
     simpleModal.style.display = "flex";
 };
 
-// 傳送例行盤點
+// 傳送例行盤點 (不再阻擋負數)
 document.getElementById("fullAuditForm").onsubmit = function(e) {
     e.preventDefault();
     const btn = document.getElementById("submitFullBtn");
+    
     btn.disabled = true; btn.innerText = "傳送中...";
     const payload = {
         action: "report",
@@ -230,5 +229,6 @@ function sendData(payload, modal, btn, originalText) {
     .then(r => r.json()).then(() => {
         alert("✅ 匯報成功！"); modal.style.display = "none"; loadRemoteData();
         if(payload.action === "task_update") document.getElementById("t_notes").value = "";
+        else document.getElementById("fullAuditForm").reset();
     }).catch(err => alert("⚠️ 傳送失敗")).finally(() => { btn.disabled = false; btn.innerText = originalText; });
 }
